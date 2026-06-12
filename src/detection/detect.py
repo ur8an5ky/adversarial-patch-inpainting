@@ -15,7 +15,7 @@ from src.detection.region import (
 
 def detect_mask(image: np.ndarray, *,
                 signal: str = "local_std",
-                selection: str = "densest",
+                selection: str = "largest",
                 density_ksize: int | None = None,
                 threshold: int | None = None,
                 open_ksize: int = 7,
@@ -35,8 +35,7 @@ def detect_mask(image: np.ndarray, *,
     if int(density.max()) == 0:
         return np.zeros(image.shape[:2], dtype=np.uint8)
 
-    binary = (threshold_otsu(density) if threshold is None
-              else threshold_fixed(density, threshold))
+    binary = (threshold_otsu(density) if threshold is None else threshold_fixed(density, threshold))
     cleaned = clean_mask(binary, open_ksize, close_ksize)
 
     if selection == "densest":
@@ -46,8 +45,7 @@ def detect_mask(image: np.ndarray, *,
     mask = bounding_box_mask(blob)
 
     if dilate_ksize > 0:
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
-                                           (dilate_ksize, dilate_ksize))
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (dilate_ksize, dilate_ksize))
         mask = cv2.dilate(mask, kernel)
     return mask
 
