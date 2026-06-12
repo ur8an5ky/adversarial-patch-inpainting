@@ -10,8 +10,8 @@ Projekt z Analizy i Przetwarzania Obrazów.
 - `tests/` — sanity-checki
 
 ## Setup
-\`\`\`bash
+```bash
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-\`\`\`
+```

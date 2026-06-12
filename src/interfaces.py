@@ -19,7 +19,6 @@ def inpaint(image: np.ndarray, mask: np.ndarray) -> np.ndarray:
     raise NotImplementedError
 
 
-def evaluate(pred: np.ndarray, target: np.ndarray,
-             mask: np.ndarray) -> dict[str, float]:
+def evaluate(pred: np.ndarray, target: np.ndarray, mask: np.ndarray) -> dict[str, float]:
     """Compute reconstruction metrics within the mask. Returns metrics dict."""
     raise NotImplementedError

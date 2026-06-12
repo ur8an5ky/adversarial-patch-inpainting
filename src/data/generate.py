@@ -33,8 +33,7 @@ def make_synthetic_patch(size: int, rng: np.random.Generator) -> np.ndarray:
     return rng.integers(0, 256, size=(size, size, 3), dtype=np.uint8)
 
 
-def paste_patch(image: np.ndarray, patch: np.ndarray,
-                top_left: tuple[int, int]) -> tuple[np.ndarray, np.ndarray]:
+def paste_patch(image: np.ndarray, patch: np.ndarray, top_left: tuple[int, int]) -> tuple[np.ndarray, np.ndarray]:
     """Paste patch onto image; return (patched_image, mask)."""
     y, x = top_left
     ph, pw = patch.shape[:2]
@@ -45,8 +44,7 @@ def paste_patch(image: np.ndarray, patch: np.ndarray,
     return patched, mask
 
 
-def apply_random_patch(image: np.ndarray, patch: np.ndarray,
-                       rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray]:
+def apply_random_patch(image: np.ndarray, patch: np.ndarray, rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray]:
     h, w = image.shape[:2]
     ph, pw = patch.shape[:2]
     y = int(rng.integers(0, h - ph + 1))
@@ -54,8 +52,7 @@ def apply_random_patch(image: np.ndarray, patch: np.ndarray,
     return paste_patch(image, patch, (y, x))
 
 
-def generate(base_dir: Path, out_dir: Path, n: int, size: int,
-             patch_size: int, patch_path: Path | None, seed: int) -> None:
+def generate(base_dir: Path, out_dir: Path, n: int, size: int, patch_size: int, patch_path: Path | None, seed: int) -> None:
     rng = np.random.default_rng(seed)
     bases = find_images(base_dir)
     if not bases:
@@ -75,10 +72,8 @@ def generate(base_dir: Path, out_dir: Path, n: int, size: int,
         patched, mask = apply_random_patch(clean, patch, rng)
 
         name = f"img{i:04d}.png"
-        cv2.imwrite(str(out_dir / "clean" / name),
-                    cv2.cvtColor(clean, cv2.COLOR_RGB2BGR))
-        cv2.imwrite(str(out_dir / "patched" / name),
-                    cv2.cvtColor(patched, cv2.COLOR_RGB2BGR))
+        cv2.imwrite(str(out_dir / "clean" / name), cv2.cvtColor(clean, cv2.COLOR_RGB2BGR))
+        cv2.imwrite(str(out_dir / "patched" / name), cv2.cvtColor(patched, cv2.COLOR_RGB2BGR))
         cv2.imwrite(str(out_dir / "mask" / name), mask)
 
     print(f"Wrote {len(bases)} triples to {out_dir}")
@@ -91,12 +86,10 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=50)
     ap.add_argument("--size", type=int, default=224)
     ap.add_argument("--patch-size", type=int, default=60)
-    ap.add_argument("--patch", type=Path, default=None,
-                    help="patch image (default: synthetic)")
+    ap.add_argument("--patch", type=Path, default=None, help="patch image (default: synthetic)")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
-    generate(args.base_dir, args.out, args.n, args.size,
-             args.patch_size, args.patch, args.seed)
+    generate(args.base_dir, args.out, args.n, args.size, args.patch_size, args.patch, args.seed)
 
 
 if __name__ == "__main__":

@@ -29,11 +29,9 @@ def threshold_otsu(response: np.ndarray) -> np.ndarray:
     return out
 
 
-def threshold_adaptive(response: np.ndarray, block: int = 51,
-                       c: int = -10) -> np.ndarray:
+def threshold_adaptive(response: np.ndarray, block: int = 51, c: int = -10) -> np.ndarray:
     """Local adaptive threshold. (H, W) uint8 {0, 255}."""
-    return cv2.adaptiveThreshold(response, 255, cv2.ADAPTIVE_THRESH_MEAN_C,
-                                 cv2.THRESH_BINARY, block, c)
+    return cv2.adaptiveThreshold(response, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block, c)
 
 def local_std(image: np.ndarray, ksize: int = 7) -> np.ndarray:
     """Local standard deviation of grayscale — solid-high inside noisy

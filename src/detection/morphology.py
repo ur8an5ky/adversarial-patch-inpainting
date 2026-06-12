@@ -19,7 +19,6 @@ def closing(mask: np.ndarray, ksize: int = 15) -> np.ndarray:
     return cv2.morphologyEx(mask, cv2.MORPH_CLOSE, _kernel(ksize))
 
 
-def clean_mask(mask: np.ndarray, open_ksize: int = 7,
-               close_ksize: int = 15) -> np.ndarray:
+def clean_mask(mask: np.ndarray, open_ksize: int = 7, close_ksize: int = 15) -> np.ndarray:
     """Opening to kill background noise, then closing to solidify the blob."""
     return closing(opening(mask, open_ksize), close_ksize)

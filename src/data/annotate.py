@@ -22,7 +22,7 @@ from src.data.loading import load_image
 
 class MaskAnnotator:
     def __init__(self, image: np.ndarray, brush: int = 15):
-        self.display = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  # cv2 shows BGR
+        self.display = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         self.mask = np.zeros(image.shape[:2], dtype=np.uint8)
         self.brush = brush
         self.drawing = False
@@ -71,10 +71,8 @@ def annotate(image_path: Path, out_path: Path, brush: int) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Interactive mask annotation.")
     parser.add_argument("image", type=Path)
-    parser.add_argument("-o", "--out", type=Path, default=None,
-                        help="output mask path (default: <image>_mask.png)")
-    parser.add_argument("-b", "--brush", type=int, default=15,
-                        help="brush radius in pixels")
+    parser.add_argument("-o", "--out", type=Path, default=None, help="output mask path (default: <image>_mask.png)")
+    parser.add_argument("-b", "--brush", type=int, default=15, help="brush radius in pixels")
     args = parser.parse_args()
     out = args.out or args.image.with_name(args.image.stem + "_mask.png")
     annotate(args.image, out, args.brush)

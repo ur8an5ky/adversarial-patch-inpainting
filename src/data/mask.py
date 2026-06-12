@@ -20,9 +20,7 @@ def load_mask(path: str | Path) -> np.ndarray:
     return np.where(gray > 127, 255, 0).astype(np.uint8)
 
 
-def overlay_mask(image: np.ndarray, mask: np.ndarray,
-                 color: tuple[int, int, int] = (255, 0, 0),
-                 alpha: float = 0.5) -> np.ndarray:
+def overlay_mask(image: np.ndarray, mask: np.ndarray, color: tuple[int, int, int] = (255, 0, 0), alpha: float = 0.5) -> np.ndarray:
     """Tint the masked region of an RGB image for visualization."""
     out = image.copy()
     region = mask == 255
