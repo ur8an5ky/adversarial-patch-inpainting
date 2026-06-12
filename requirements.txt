@@ -4,3 +4,5 @@ scikit-image
 matplotlib
 pytest
 nbstripout
+pillow
+ipykernel
