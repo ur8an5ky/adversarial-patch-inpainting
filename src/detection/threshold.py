@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from src.detection.edges import canny_edges
+from src.detection.edges import to_gray
 
 
 def edge_density(image: np.ndarray, ksize: int = 25) -> np.ndarray:
@@ -33,3 +34,12 @@ def threshold_adaptive(response: np.ndarray, block: int = 51,
     """Local adaptive threshold. (H, W) uint8 {0, 255}."""
     return cv2.adaptiveThreshold(response, 255, cv2.ADAPTIVE_THRESH_MEAN_C,
                                  cv2.THRESH_BINARY, block, c)
+
+def local_std(image: np.ndarray, ksize: int = 7) -> np.ndarray:
+    """Local standard deviation of grayscale — solid-high inside noisy
+    patches, thin/low on natural structure. (H, W) uint8."""
+    gray = to_gray(image).astype(np.float32)
+    mean = cv2.blur(gray, (ksize, ksize))
+    mean_sq = cv2.blur(gray * gray, (ksize, ksize))
+    var = np.clip(mean_sq - mean * mean, 0, None)
+    return np.sqrt(var).clip(0, 255).astype(np.uint8)
