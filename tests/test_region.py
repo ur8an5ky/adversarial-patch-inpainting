@@ -26,3 +26,16 @@ def test_bounding_box_fills_rect():
     out = bounding_box_mask(mask)
     assert (out[5:11, 5:13] == 255).all()
     assert out[0, 0] == 0
+
+def test_densest_component_prefers_high_density():
+    mask = np.zeros((40, 40), dtype=np.uint8)
+    mask[2:8, 2:8] = 255
+    mask[30:34, 30:34] = 255
+    density = np.zeros((40, 40), dtype=np.uint8)
+    density[2:8, 2:8] = 50
+    density[30:34, 30:34] = 200
+
+    from src.detection.region import densest_component
+    out = densest_component(mask, density)
+    assert out[31, 31] == 255
+    assert out[3, 3] == 0
