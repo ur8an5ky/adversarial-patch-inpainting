@@ -8,11 +8,14 @@ from src.detection.threshold import (
     edge_density, local_std, threshold_fixed, threshold_otsu,
 )
 from src.detection.morphology import clean_mask
-from src.detection.region import largest_component, bounding_box_mask
+from src.detection.region import (
+    largest_component, densest_component, bounding_box_mask,
+)
 
 
 def detect_mask(image: np.ndarray, *,
-                signal: str = "edge_density",
+                signal: str = "local_std",
+                selection: str = "densest",
                 density_ksize: int | None = None,
                 threshold: int | None = None,
                 open_ksize: int = 7,
@@ -20,8 +23,8 @@ def detect_mask(image: np.ndarray, *,
                 dilate_ksize: int = 5) -> np.ndarray:
     """Detect the patch region. Returns (H, W) uint8 {0, 255}.
 
-    signal: "edge_density" (Canny-based) or "local_std" (local variance).
-    density_ksize: signal window; None uses a per-signal default.
+    signal:    "local_std" (default) or "edge_density".
+    selection: "densest" (default, picks the highest-variance blob) or "largest".
     threshold: fixed threshold, or None for Otsu.
     """
     if signal == "local_std":
@@ -35,7 +38,12 @@ def detect_mask(image: np.ndarray, *,
     binary = (threshold_otsu(density) if threshold is None
               else threshold_fixed(density, threshold))
     cleaned = clean_mask(binary, open_ksize, close_ksize)
-    mask = bounding_box_mask(largest_component(cleaned))
+
+    if selection == "densest":
+        blob = densest_component(cleaned, density)
+    else:
+        blob = largest_component(cleaned)
+    mask = bounding_box_mask(blob)
 
     if dilate_ksize > 0:
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,
