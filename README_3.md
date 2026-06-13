@@ -1,14 +1,6 @@
-Oczywiście! Dodałem nową sekcję opisującą proces tworzenia patcha (wraz ze wspomnieniem o notatniku `00_adversarial_patch_generation.ipynb`).
-
-Zaktualizowany plik README zachowałem w języku angielskim, aby był w pełni spójny z resztą Twojego projektu. Dodatkowo uaktualniłem sekcję instalacji o wzmiankę dotyczącą wymogów CUDA, o których rozmawialiśmy wcześniej.
-
-Oto gotowy tekst do wklejenia:
-
----
-
 # Part 3 - Evaluation and ML Benchmark
 
-Author: *Osoba 3*
+Author: *Emil Gruszecki*
 
 This section introduces quantitative evaluation of the classically reconstructed images and establishes a Machine Learning benchmark using pre-trained deep neural networks. It computes objective quality metrics and estimates the classification impact of inpainting on adversarial patches.
 
@@ -33,22 +25,6 @@ metrics = evaluate(pred=reconstructed_img, target=clean_img, mask=mask_img)
 ```
 
 The computations only reflect performance over the `mask_img > 127` pixels, as evaluating the entire unmasked area would skew results (smooth backgrounds are identical).
-
-## Setup & Requirements
-
-Additional dependencies were introduced for deep learning integration:
-
-```bash
-pip install torch torchvision scikit-image simple-lama-inpainting
-
-```
-
-* `torch` & `torchvision`: for ResNet50 class prediction.
-* `simple-lama-inpainting`: lightweight interface mapping strictly to the original LaMa architecture.
-* `scikit-image`: structural similarity computations (`ssim`).
-
-These requirements are embedded alongside earlier dependencies in `requirements.txt`.
-*Note: If you are running this on newer hardware (e.g., RTX 50-series), ensure your `requirements.txt` points to the PyTorch Nightly CUDA index (`--extra-index-url https://download.pytorch.org/whl/nightly/cu124`) to avoid kernel execution errors.*
 
 ## Adversarial Patch Generation (Notebook 00)
 
