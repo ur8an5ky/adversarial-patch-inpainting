@@ -44,11 +44,27 @@ def paste_patch(image: np.ndarray, patch: np.ndarray, top_left: tuple[int, int])
     return patched, mask
 
 
-def apply_random_patch(image: np.ndarray, patch: np.ndarray, rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray]:
+def apply_random_patch(image: np.ndarray, patch: np.ndarray, rng: np.random.Generator, margin_pct: float = 0.15) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Paste the patch randomly, but keep it within a central 'safe zone' 
+    to avoid being removed by PyTorch's CenterCrop and to ensure it 
+    interacts with the main subject of the image.
+    """
     h, w = image.shape[:2]
     ph, pw = patch.shape[:2]
-    y = int(rng.integers(0, h - ph + 1))
-    x = int(rng.integers(0, w - pw + 1))
+
+    margin_y = int(h * margin_pct)
+    margin_x = int(w * margin_pct)
+    
+    min_y, max_y = margin_y, h - ph - margin_y
+    min_x, max_x = margin_x, w - pw - margin_x
+    
+    if max_y <= min_y: min_y, max_y = 0, h - ph
+    if max_x <= min_x: min_x, max_x = 0, w - pw
+
+    y = int(rng.integers(min_y, max_y + 1))
+    x = int(rng.integers(min_x, max_x + 1))
+    
     return paste_patch(image, patch, (y, x))
 
 
